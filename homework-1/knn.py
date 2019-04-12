@@ -3,7 +3,6 @@ from time import time
 import numpy as np
 import math
 from preprocess import preprocess_data
-from verify import verify
 
 
 def get_euclidean_distances(X, y):
