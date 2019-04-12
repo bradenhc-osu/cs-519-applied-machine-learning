@@ -36,7 +36,7 @@ def run_knn_with_labels(X, Y, k, f):
             errors += 1
     end = time()
 
-    error_rate = errors / len(X) * 100
+    error_rate = errors / len(Y) * 100
     positive_rate = positive / len(Y) * 100
     run_time = end - start
 
@@ -57,8 +57,7 @@ if __name__ == "__main__":
     #print('Using Manhattan distances')
     #f = get_manhattan_distances
 
-    #Ks = [1, 3, 5, 7, 9, 99, 999, 9999]
-    Ks = [6, 7, 8, 9, 10, 11, 12]
+    Ks = [1, 3, 5, 7, 9, 99, 999, 9999]
 
     for k in Ks:
         # First get the training stats
