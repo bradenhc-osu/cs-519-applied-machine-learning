@@ -7,7 +7,7 @@ def perceptron_train(X, y, w=None, mode='vanilla'):
         return perceptron_train_vanilla(X, y, w)
 
     elif mode == 'averaged':
-        return perceptron_averaged(X, y, w)
+        return perceptron_train_averaged(X, y, w)
 
     else:
         raise Exception("Invalid mode for perceptron: '%s'" % mode)
@@ -22,7 +22,7 @@ def perceptron_train_vanilla(X, y, w):
     return w, updates, updates / len(X)
 
 
-def perceptron_averaged(X, y, w):
+def perceptron_train_averaged(X, y, w):
     wa = np.zeros(len(w))
     c = 0
     updates = 0
