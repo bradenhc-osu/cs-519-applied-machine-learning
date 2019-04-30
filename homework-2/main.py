@@ -2,13 +2,13 @@ from os.path import join
 from pprint import pprint
 from operator import itemgetter
 from preprocess import preprocess_data
-from perceptron import perceptron_train, perceptron_classify, perceptron_validate
+from perceptron import perceptron_train, perceptron_classify, perceptron_validate, perceptron_test
 
 
 def print_weights(w, mappings=None, top=-1, bias=True):
     meta = []
     if mappings is not None:
-        meta.append('labeled') 
+        meta.append('labeled')
     meta.append('with bias' if bias else 'without bias')
     meta_str = ', '.join(meta)
     if mappings is None:
@@ -24,7 +24,8 @@ def print_weights(w, mappings=None, top=-1, bias=True):
             'race',
             'gender',
             'hours-per-week',
-            'country-of-origin'
+            'country-of-origin',
+            'combo'
         ]
         mws = []
         if bias is True:
@@ -45,7 +46,7 @@ def print_weights(w, mappings=None, top=-1, bias=True):
     print()
 
 
-def run_with_mode(mode, epochs, trdata, dvdata):
+def run_with_mode(mode, epochs, trdata, dvdata, test=False):
     print("Mode: %s ----------------------------------------------" % mode)
     w = None
     for e in range(epochs):
@@ -62,12 +63,20 @@ def run_with_mode(mode, epochs, trdata, dvdata):
 
 if __name__ == "__main__":
     # Fetch and preprocess the data
-    trdata, m = preprocess_data("./data/income.train.txt.5k")
-    dvdata, _ = preprocess_data("./data/income.dev.txt", mappings=m)
+    normalize_numerical = False
+    enable_combos = False
+    trdata, m = preprocess_data(
+        "./data/income.train.txt.5k",
+        normalize_numerical=normalize_numerical,
+        enable_combos=enable_combos
+    )
+    dvdata, _ = preprocess_data(
+        "./data/income.dev.txt", 
+        mappings=m, 
+        normalize_numerical=normalize_numerical,
+        enable_combos=enable_combos)
 
     w = run_with_mode('vanilla', 5, trdata, dvdata)
     print_weights(w, mappings=m, top=5, bias=False)
     w = run_with_mode('averaged', 5, trdata, dvdata)
     print_weights(w, mappings=m, top=5, bias=False)
-
-    print_weights(w, mappings=m)

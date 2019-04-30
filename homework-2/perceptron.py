@@ -53,3 +53,13 @@ def perceptron_validate(w, X, y):
         if not ok:
             errors += 1
     return errors / len(X), positive / len(X)
+
+def perceptron_test(w, X):
+    positive = 0
+    y = []
+    for i, x in enumerate(X):
+        p, _ = perceptron_classify(w, x)
+        if p > 0:
+            positive += 1
+        y.append(p)
+    return y, positive / len(X)
