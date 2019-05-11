@@ -36,7 +36,7 @@ if __name__ == "__main__":
     y_predict = scale_y(y_predict, reverse=True)
 
     # Write test results back to the file
-    with open("./data/my_submission.csv", "w") as file_prediction:
+    with open("./data/my_submission_2.csv", "w") as file_prediction:
         file_prediction.write("Id,SalePrice\n")
         for i, row in enumerate(data_test):
             file_prediction.write("%s,%s\n" % (row[0], y_predict[i]))
