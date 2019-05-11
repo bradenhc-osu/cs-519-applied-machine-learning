@@ -155,13 +155,7 @@ def fill_smart(preprocessed_features, mapped_features, extras):
                         count_key = "count_for_%d" % vi
                         preprocessed_features[i][vi] = extras[sum_key] / extras[count_key]
                     else:
-                        # Normalize the value
-                        fmin = extras["min_for_%d" % vi]
-                        fmax = extras["max_for_%d" % vi]
-                        if fmax - fmin == 0:
-                            preprocessed_features[i][vi] = 0
-                        else:
-                            preprocessed_features[i][vi] = v
+                        preprocessed_features[i][vi] = v
                 else:
                     preprocessed_features[i][j] = 1
 

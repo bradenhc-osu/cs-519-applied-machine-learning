@@ -1,5 +1,5 @@
-from sklearn.linear_model import LinearRegression, Ridge
-from sklearn.kernel_ridge import KernelRidge
+from sklearn.linear_model import Ridge
+from sklearn.preprocessing import PolynomialFeatures
 from preprocess import read_data, preprocess, scale_y, separate_numerical
 from train import rmse, rmsle
 from operator import itemgetter
@@ -15,14 +15,8 @@ if __name__ == "__main__":
     X_train_cat, m_cat = preprocess(X_cat, binarize=True, names=X_cat_features)
     X_train_num, m_num = preprocess(X_num, names=X_num_features)
 
-    m = {**m_cat, **m_num}
-
-    print(X_train_cat.shape, X_train_num.shape)
-
     X_train = np.concatenate((X_train_cat, X_train_num), axis=1)
     y_train = scale_y(data_train[:, -1].transpose().astype(int))
-
-    print("Number of features: %d" % len(X_train[0]))
 
     data_dev = read_data('./data/my_dev.csv')
 
@@ -37,13 +31,6 @@ if __name__ == "__main__":
     # Train the model
     a = 22.9
     model = Ridge(alpha=a, fit_intercept=True).fit(X_train, y_train)
-
-    # Get some statistics on our model
-    print("Top ten most positive/negative weights")
-    for i, w in enumerate(sorted(zip([k[2] for k in m.keys()], model.coef_), key=itemgetter(1))):
-        if i < 10 or len(model.coef_) - i <= 10:
-            print(w)
-    print("Bias coefficient = %f" % model.intercept_)
 
     # Test on our validation set to get the RMSLE
     y_predict = model.predict(X_dev)
