@@ -7,11 +7,13 @@ from operator import itemgetter
 if __name__ == "__main__":
 
     data_train = read_data('./data/my_train.csv')
-    X_train, m = preprocess(data_train[:, 1:-1], binarize=True)
+    X_train, m = preprocess(data_train[:, 1:-1])
     y_train = scale_y(data_train[:, -1].transpose().astype(int))
 
+    print("Number of features: %d" % len(X_train[0]))
+
     data_dev = read_data('./data/my_dev.csv')
-    X_dev = preprocess(data_dev[:, 1:-1], mappings=m, binarize=True)
+    X_dev = preprocess(data_dev[:, 1:-1], mappings=m)
     y_dev = scale_y(data_dev[:, -1].transpose().astype(int))
 
     # Train the model
@@ -31,7 +33,7 @@ if __name__ == "__main__":
 
     # Test our model
     data_test = read_data('./data/test.csv')
-    X_test = preprocess(data_test[:, 1:], mappings=m, binarize=True)
+    X_test = preprocess(data_test[:, 1:], mappings=m)
     y_predict = model.predict(X_test)
     y_predict = scale_y(y_predict, reverse=True)
 
