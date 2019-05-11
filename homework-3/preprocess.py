@@ -16,13 +16,32 @@ def read_data(filename):
     return np.array(data)
 
 
-def preprocess(features, mappings=None, binarize=False):
+def separate_numerical(features):
+    categorical = []
+    categorical_names = []
+    numerical = []
+    numerical_names = []
+    for i, f in enumerate(feature_names):
+        if f[1]:
+            numerical.append(i)
+            numerical_names.append(f)
+        else:
+            categorical.append(i)
+            categorical_names.append(f)
+
+    return numerical_names, features[:, numerical], categorical_names, features[:, categorical]
+
+
+def preprocess(features, mappings=None, binarize=False, names=None):
 
     mappings_provided = False
     if mappings is not None:
         mappings_provided = True
     else:
         mappings = {}
+
+    if names is None:
+        names = feature_names
 
     if binarize:
         map_func = map_binary
@@ -38,7 +57,7 @@ def preprocess(features, mappings=None, binarize=False):
 
     mapped_features = [
         [
-            map_func(feature, j, mappings, extras)
+            map_func(feature, j, mappings, names, extras)
             for j, feature in enumerate(row)
         ]
         for i, row in enumerate(features)
@@ -54,8 +73,8 @@ def preprocess(features, mappings=None, binarize=False):
         return preprocessed_features, mappings
 
 
-def map_binary(f, i, mappings, extras):
-    m = (i, f, feature_names[i][0] + '=' + f)
+def map_binary(f, i, mappings, names, extras):
+    m = (i, f, names[i][0] + '=' + f)
     if not m in mappings:
         if not extras["mappings_provided"]:
             mappings[m] = len(mappings)
@@ -65,11 +84,11 @@ def map_binary(f, i, mappings, extras):
     return mappings[m]
 
 
-def map_smart(f, i, mappings, extras):
-    fn = feature_names[i]
+def map_smart(f, i, mappings, names, extras):
+    fn = names[i]
     # Check if it is a numerical feature
     if fn[1]:
-        m = (i, '', fn[0])
+        m = (i, 'numerical', fn[0])
         if m not in mappings:
             mappings[m] = len(mappings)
         fm = mappings[m]
@@ -112,7 +131,7 @@ def map_smart(f, i, mappings, extras):
             return (fnum, fm)
     else:
         # It isn't a numerical feature, just binarize it
-        return map_binary(f, i, mappings, extras)
+        return map_binary(f, i, mappings, names, extras)
 
 
 def fill_binary(preprocessed_features, mapped_features, extras):
