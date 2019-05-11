@@ -1,11 +1,11 @@
 #
-# ("name", isNumerical?)
+# (name, isNumerical?)
 #
 feature_names = [
     ("MSSubClass", False),
     ("MSZoning", False),
     ("LotFrontage", True),
-    ("LotArea", True),
+    ("LotArea", True),          # Quadratically related to pool area?
     ("Street", False),
     ("Alley", False),
     ("LotShape", False),
@@ -38,15 +38,15 @@ feature_names = [
     ("BsmtFinSF1", True),
     ("BsmtFinType2", False),
     ("BsmtFinSF2", True),
-    ("BsmtUnfSF", True),
-    ("TotalBsmtSF", True),
+    ("BsmtUnfSF", True),        # Quadratically related?
+    ("TotalBsmtSF", True),      #
     ("Heating", False),
     ("HeatingQC", False),
     ("CentralAir", False),
     ("Electrical", False),
-    ("1stFlrSF", True),
-    ("2ndFlrSF", True),
-    ("LowQualFinSF", True),
+    ("1stFlrSF", True),         # Quadraticaly related?
+    ("2ndFlrSF", True),         #
+    ("LowQualFinSF", True),     #
     ("GrLivArea", True),
     ("BsmtFullBath", True),
     ("BsmtHalfBath", True),
@@ -72,7 +72,7 @@ feature_names = [
     ("EnclosedPorch", True),
     ("3SsnPorch", True),
     ("ScreenPorch", True),
-    ("PoolArea", True),
+    ("PoolArea", True),         # Quadratically related to lot size?
     ("PoolQC", False),
     ("Fence", False),
     ("MiscFeature", False),
