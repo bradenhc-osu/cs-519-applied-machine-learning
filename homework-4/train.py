@@ -84,6 +84,7 @@ def train_average(trainfile, devfile, epochs=5):
     print("best dev err %.1f%%, |w|=%d, time: %.1f secs" % (best_err * 100, len(model), time.time() - t))
     print_features(model)
     print_errors(err_pos, err_neg, devfile)
+    return model
 
 
 def prune(model, model_avg, counts, cutoff=1):
@@ -118,7 +119,13 @@ def print_errors(err_pos, err_neg, devfile):
         if i >= 5:
             break
         print(__cache[devfile][j][2])
-    
+
+
+def predict(testfile, model):
+    with open(testfile + ".predicted", "w") as out:
+        for (_, svec, words) in read_from(testfile):
+            p = "+" if model.dot(svec) > 0 else "-"
+            out.write("%s\t%s\n" % (p, words))
 
 
 if __name__ == "__main__":
@@ -126,4 +133,7 @@ if __name__ == "__main__":
     train(sys.argv[1], sys.argv[2], 10)
     print()
     print("Smart Averaged Perceptron ------------------------------")
-    train_average(sys.argv[1], sys.argv[2], 10)
+    model = train_average(sys.argv[1], sys.argv[2], 10)
+    print("Testing ------------------------------------------------")
+    predict(sys.argv[3], model)
+    print("Done")
